@@ -215,24 +215,17 @@ model = modellib.MaskRCNN(mode="training", config=config,
 
 
 # Which weights to start with?
-init_with = "last"  # imagenet, coco, or last
+init_with = "imagenet"  # imagenet or last
 
 if init_with == "imagenet":
     model.load_weights(model.get_imagenet_weights(), by_name=True)
-elif init_with == "coco":
-    # Load weights trained on MS COCO, but skip layers that
-    # are different due to the different number of classes
-    # See README for instructions to download the COCO weights
-    model.load_weights(COCO_MODEL_PATH, by_name=True,
-                       exclude=["mrcnn_class_logits", "mrcnn_bbox_fc", 
-                                "mrcnn_bbox", "mrcnn_mask"])
 elif init_with == "last":
     # Load the last model you trained and continue training
     model.load_weights(model.find_last(), by_name=True)
 
 model.train(dataset_train,dataset_train,
             learning_rate=config.LEARNING_RATE, 
-            epochs=40, 
+            epochs=32, 
             layers='heads')
 
 
